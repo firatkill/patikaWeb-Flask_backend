@@ -3,9 +3,9 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 
-def sum_of_my_question_groups(my_data, model, plot=False):
+
+def sum_of_my_question_groups(my_data, model):
     my_personality = model.predict(my_data)
-    # print('Müşterinin Sınıfı: ', my_personality, end="\n\n")
     col_list = list(my_data)
     ext = col_list[0:10]
     est = col_list[10:20]
@@ -23,6 +23,28 @@ def sum_of_my_question_groups(my_data, model, plot=False):
 
 
     return my_sums
+
+
+
+
+columns_order = [
+        'EXT1', 'EXT2', 'EXT3', 'EXT4', 'EXT5', 'EXT6', 'EXT7', 'EXT8', 'EXT9', 'EXT10',
+        'EST1', 'EST2', 'EST3', 'EST4', 'EST5', 'EST6', 'EST7', 'EST8', 'EST9', 'EST10',
+        'AGR1', 'AGR2', 'AGR3', 'AGR4', 'AGR5', 'AGR6', 'AGR7', 'AGR8', 'AGR9', 'AGR10',
+        'CSN1', 'CSN2', 'CSN3', 'CSN4', 'CSN5', 'CSN6', 'CSN7', 'CSN8', 'CSN9', 'CSN10',
+        'OPN1', 'OPN2', 'OPN3', 'OPN4', 'OPN5', 'OPN6', 'OPN7', 'OPN8', 'OPN9', 'OPN10'
+    ]
+
+def veriyi_duzenle(dataframe):
+    dataframe['id'] = 0
+    df_pivot = dataframe.pivot(index='id', columns='question_code', values='answer')
+    df_pivot.columns.name = None
+    df_pivot = df_pivot[columns_order]
+    df_pivot.reset_index(drop=True, inplace=True)
+    return df_pivot
+
+
+
 kampanyalar = {
     0: [
         "Uzun Vadeli Tasarruf Hesapları: Düşük risk ve güvenli getiri sağlayan tasarruf hesaplarının tanıtımı.",
@@ -62,18 +84,7 @@ kampanyalar = {
 }
 
 
-def min_max_scaler(dataframe):
-    mms = MinMaxScaler(feature_range=(0,1))
-    cols = list(dataframe.columns)
-    dataframe = mms.fit_transform(dataframe)
-    dataframe = pd.DataFrame(dataframe, columns=cols)
-    return dataframe
 
-
-def prepare_data(dataframe):
-    dataframe.dropna(inplace=True)
-    dataframe = min_max_scaler(dataframe)
-    return dataframe
 
 def kampanyaları_getir(sınıf):
     thisdict={}
