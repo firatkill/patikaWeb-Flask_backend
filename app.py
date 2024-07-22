@@ -1,7 +1,7 @@
 
 from flask_cors import CORS, cross_origin
-import numpy as np
-from flask import Flask, request, render_template
+
+from flask import Flask, request
 import joblib
 import files.kampanya as kampanya
 import pandas as pd
